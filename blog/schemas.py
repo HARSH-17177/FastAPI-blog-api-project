@@ -27,11 +27,16 @@ class ShowUser(BaseModel):
     class Config():
         from_attributes=True   
 
+class ShowUser_without_its_blog(BaseModel):
+    name:str
+    email:str 
+
+
 
 class ShowBlog(BaseModel):
     title:str
     body: str    
-    creator: ShowUser
+    creator: ShowUser_without_its_blog
     class Config():
         from_attributes=True   
 
