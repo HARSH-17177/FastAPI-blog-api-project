@@ -14,10 +14,19 @@ def create(request: schemas.Blog, db: Session, current_user: models.User = Depen
     db.refresh(new_blog)
     return new_blog 
 
-def get_by_id(id:int,db:Session):
-    filterd_blog = db.query(models.Blog).filter(models.Blog.id==id).first()
+def get_by_string(input: str, db: Session):
+    keyword = f"%{input}%"
+    filterd_blog = db.query(models.Blog).join(models.User).filter(
+        (models.Blog.title.ilike(keyword)) |
+        (models.Blog.body.ilike(keyword)) |
+        (models.User.name.ilike(keyword)) |
+        (models.User.email.ilike(keyword))
+    ).all()
     if not filterd_blog:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"blog with id {id} not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"blog with input {input} not found"
+        )
     return filterd_blog
 
 def delete_by_id(id:int,db:Session):

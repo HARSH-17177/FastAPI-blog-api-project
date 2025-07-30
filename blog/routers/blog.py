@@ -21,9 +21,9 @@ def create_blog(request: schemas.Blog,db: Session=Depends(get_db),current_user:m
     return blog_repo.create(request,db,current_user)
 
 
-@router.get('/{id}',status_code=200,response_model=schemas.ShowBlog)
-def get_blogby_id(id,db: Session=Depends(get_db)):
-    return blog_repo.get_by_id(id,db)
+@router.get('/{input}',status_code=200,response_model=List[schemas.ShowBlog])
+def get_blogby_string(input,db: Session=Depends(get_db)):
+    return blog_repo.get_by_string(input,db)
 
 @router.delete('/{id}',status_code=status.HTTP_204_NO_CONTENT)
 def delete_blog_by_id(id,db:Session=Depends(get_db)):
