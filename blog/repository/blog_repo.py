@@ -29,6 +29,16 @@ def get_by_string(input: str, db: Session):
         )
     return filterd_blog
 
+def get_my_blog(db: Session, current_user: models.User = Depends(oauth2.get_current_user)):
+    blogs = db.query(models.Blog).join(models.User).filter(models.User.email == current_user.email).all()
+    if not blogs:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No blogs found for user with email {current_user.email}"
+        )
+    return blogs
+
+
 def delete_by_id(id:int,db:Session):
     blog = db.query(models.Blog).filter(models.Blog.id==id)
     if not blog.first():
