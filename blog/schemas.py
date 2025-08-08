@@ -36,6 +36,7 @@ class ShowUser_without_its_blog(BaseModel):
 
 
 class ShowBlog(BaseModel):
+    id: int
     title:str
     body: str    
     creator: ShowUser_without_its_blog

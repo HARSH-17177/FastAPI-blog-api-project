@@ -38,8 +38,15 @@ def get_my_blog(db: Session, current_user: models.User = Depends(oauth2.get_curr
         )
     return blogs
 
+def get_my_emailid(current_user: models.User = Depends(oauth2.get_current_user)):
+    return {
+        "id": current_user.id,
+        "name": current_user.name,
+        "email": current_user.email
+    }
 
-def delete_by_id(id:int,db:Session):
+
+def delete_by_id(id:int,db:Session,current_user: models.User = Depends(oauth2.get_current_user)):
     blog = db.query(models.Blog).filter(models.Blog.id==id)
     if not blog.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Blog with id {id} not found")
@@ -47,7 +54,7 @@ def delete_by_id(id:int,db:Session):
     db.commit()
     return 'deleted'
 
-def update_by_id(id:int,request:schemas.Blog,db:Session):
+def update_by_id(id:int,request:schemas.Blog,db:Session,current_user: models.User = Depends(oauth2.get_current_user)):
     blog =db.query(models.Blog).filter(models.Blog.id==id)
     if not blog.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Blog with id {id} not found")
